@@ -1,8 +1,22 @@
 import 'package:architecture_template/view/onboard/view/on_board_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'core/constants/app/app_constants.dart';
+import 'core/init/lang/language_manager.dart';
+
+Future<void> main() async{
+    await _init();
+  runApp(EasyLocalization(
+        supportedLocales: LanguageManager.instance.supportedLocales,
+        path: ApplicationConstants.LANG_ASSET_PATH,
+        startLocale: LanguageManager.instance.enLocale,
+        child: const MyApp()));
+}
+
+Future<void> _init() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
 }
 
 class MyApp extends StatelessWidget {
