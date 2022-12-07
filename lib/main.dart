@@ -1,17 +1,22 @@
 import 'package:architecture_template/view/onboard/view/on_board_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'core/constants/app/app_constants.dart';
 import 'core/init/lang/language_manager.dart';
+import 'core/init/notifier/provider_list.dart';
+import 'core/init/notifier/theme_notifer.dart';
 
-Future<void> main() async{
-    await _init();
-  runApp(EasyLocalization(
-        supportedLocales: LanguageManager.instance.supportedLocales,
-        path: ApplicationConstants.LANG_ASSET_PATH,
-        startLocale: LanguageManager.instance.trLocale,
-        child: const MyApp()));
+Future<void> main() async {
+  await _init();
+  runApp(MultiProvider(
+      providers: [...ApplicationProvider.instance.dependItems],
+      child: EasyLocalization(
+          supportedLocales: LanguageManager.instance.supportedLocales,
+          path: ApplicationConstants.LANG_ASSET_PATH,
+          startLocale: LanguageManager.instance.trLocale,
+          child: const MyApp())));
 }
 
 Future<void> _init() async {
@@ -25,13 +30,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-       localizationsDelegates: context.localizationDelegates,
+      localizationsDelegates: context.localizationDelegates,
       supportedLocales: context.supportedLocales,
       locale: context.locale,
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: context.watch<ThemeNotifier>().currentTheme,
       home: const OnBoardView(),
     );
   }
